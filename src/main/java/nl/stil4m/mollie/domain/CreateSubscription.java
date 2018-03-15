@@ -1,7 +1,5 @@
 package nl.stil4m.mollie.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Date;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,8 +30,7 @@ public class CreateSubscription {
     /**
      * Optional – The start date of the subscription in yyyy-mm-dd format. This is the first day on which your customer will be charged. When this parameter is not provided, the current date will be used instead.
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Optional<Date> startDate;
+    private Optional<String> startDate;
 
     /**
      * A description unique per customer. This will be included in the payment description along with the charge date in yyyy-mm-dd format.
@@ -52,7 +49,7 @@ public class CreateSubscription {
      */
     private Optional<String> webhookUrl;
 
-    public CreateSubscription(@Nonnull Double amount, @Nullable Integer times, @Nonnull String interval, @Nullable Date startDate, @Nonnull String description, @Nullable String method, @Nullable String webhookUrl) {
+    public CreateSubscription(@Nonnull Double amount, @Nullable Integer times, @Nonnull String interval, @Nullable String startDate, @Nonnull String description, @Nullable String method, @Nullable String webhookUrl) {
         super();
         this.amount = amount;
         this.times = Optional.ofNullable(times);
@@ -79,7 +76,7 @@ public class CreateSubscription {
         return interval;
     }
 
-    public Optional<Date> getStartDate() {
+    public Optional<String> getStartDate() {
         return startDate;
     }
 

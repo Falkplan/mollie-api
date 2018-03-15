@@ -3,6 +3,7 @@ package nl.stil4m.mollie.concepts;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import nl.stil4m.mollie.Client;
 import nl.stil4m.mollie.ResponseOrError;
@@ -100,7 +101,7 @@ public class CustomerSubscriptionsIntegrationTest {
         String description = "test subscription";
         String webhookUrl = "https://example.com/api/payment";
 
-        CreateSubscription createSubscription = new CreateSubscription(amount, times, interval, startDate, description, null, webhookUrl);
+        CreateSubscription createSubscription = new CreateSubscription(amount, times, interval, new SimpleDateFormat("yyyy-MM-dd").format(startDate), description, null, webhookUrl);
 
         ResponseOrError<Subscription> result = customerSubscriptions.create(createSubscription);
 
