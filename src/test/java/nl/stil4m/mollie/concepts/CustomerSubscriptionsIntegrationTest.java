@@ -1,5 +1,6 @@
 package nl.stil4m.mollie.concepts;
 
+import io.github.bonigarcia.wdm.ChromeDriverManager;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -44,7 +45,7 @@ public class CustomerSubscriptionsIntegrationTest {
         customerSubscriptions = client.customerSubscriptions(customer.getId());
 
         //setup selenium
-        System.setProperty("webdriver.chrome.driver", "chromedriver");
+        ChromeDriverManager.getInstance().setup();
     }
 
     @Test
