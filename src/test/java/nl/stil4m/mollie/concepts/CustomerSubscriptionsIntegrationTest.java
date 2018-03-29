@@ -22,6 +22,8 @@ import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class CustomerSubscriptionsIntegrationTest {
@@ -113,5 +115,62 @@ public class CustomerSubscriptionsIntegrationTest {
         assertThat(result.getData().getStartDate(), notNullValue());//time will differ due to timezone-stuff
         assertThat(result.getData().getDescription(), is(description));
         assertThat(result.getData().getLinks().getWebhookUrl(), is(webhookUrl));
+    }
+
+    @Test
+    public void testCancel() throws IOException, URISyntaxException, InterruptedException {
+        // https://www.mollie.com/en/docs/reference/subscriptions/create
+        //create payment that creates membate (required to create subscription), this is kinda a confirm for the payment info to do the recurring payment over
+        CreatePayment createIdealPayment = new CreateIdealPayment(10d, "test payment for subscription", "https://example.com/thank/you", Optional.empty(), null, null);
+        FirstRecurringPayment customerPayment = new FirstRecurringPayment(createIdealPayment);
+        Payment payment = customerPayments.create(customerPayment).getData();
+
+        String paymentUrl = payment.getLinks().getPaymentUrl();
+
+        //open paymentUrl and set it to paid
+
+        //setup selenium
+        WebDriver driver = new ChromeDriver();
+
+        driver.get(paymentUrl);
+        // Find ok button and click it
+        driver.findElement(By.name("issuer")).click();
+
+        //find "paid" radiobutton and click it
+        driver.findElements(By.name("final_state")).forEach(radioButton -> {
+            if (radioButton.getAttribute("value").equals("paid")) {
+                radioButton.click();
+            }
+        });
+
+        //submit form
+        driver.findElement(By.cssSelector("#footer > button")).click();
+
+        driver.quit();
+
+        //check if payment is complete
+        payment = customerPayments.get(payment.getId()).getData();//get new version of payment
+        if (!payment.getStatus().equals("paid")) {
+            fail("completing payment failed");
+            return;
+        }
+
+        Double amount = 10d;
+        Integer times = 2;
+        String interval = "7 days";
+        Date startDate = new Date();
+        String description = "test subscription";
+        String webhookUrl = "https://example.com/api/payment";
+
+        CreateSubscription createSubscription = new CreateSubscription(amount, times, interval, new SimpleDateFormat("yyyy-MM-dd").format(startDate), description, null, webhookUrl);
+
+        ResponseOrError<Subscription> result = customerSubscriptions.create(createSubscription);
+        Subscription subscription = result.getData();
+
+        //cancel subscription
+        result = customerSubscriptions.delete(subscription.getId());
+        subscription = result.getData();
+        assertEquals("cancelled", subscription.getStatus());
+        assertNotNull(subscription.getCancelledDatetime());
     }
 }
