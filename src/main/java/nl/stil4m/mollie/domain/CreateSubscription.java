@@ -28,7 +28,8 @@ public class CreateSubscription {
     private String interval;
 
     /**
-     * Optional – The start date of the subscription in yyyy-mm-dd format. This is the first day on which your customer will be charged. When this parameter is not provided, the current date will be used instead.
+     * Optional – The start date of the subscription in yyyy-mm-dd format. This is the first day on which your customer will be charged. When this
+     * parameter is not provided, the current date will be used instead.
      */
     private Optional<String> startDate;
 
@@ -38,7 +39,8 @@ public class CreateSubscription {
     private String description;
 
     /**
-     * Optional – The payment method used for this subscription, either forced on creation or null if any of the customer's valid mandates may be used.
+     * Optional – The payment method used for this subscription, either forced on creation or null if any of the customer's valid mandates may be
+     * used.
      * <br/>
      * Possible values: creditcard, directdebit, null
      */
@@ -50,7 +52,6 @@ public class CreateSubscription {
     private Optional<String> webhookUrl;
 
     public CreateSubscription(@Nonnull Double amount, @Nullable Integer times, @Nonnull String interval, @Nullable String startDate, @Nonnull String description, @Nullable String method, @Nullable String webhookUrl) {
-        super();
         this.amount = amount;
         this.times = Optional.ofNullable(times);
         this.interval = interval;

@@ -4,32 +4,50 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import nl.stil4m.mollie.Client;
 import nl.stil4m.mollie.ResponseOrError;
-import nl.stil4m.mollie.domain.*;
+import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
+import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
+import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
+import nl.stil4m.mollie.domain.CreateCustomer;
+import nl.stil4m.mollie.domain.CreatePayment;
+import nl.stil4m.mollie.domain.CreateSubscription;
+import nl.stil4m.mollie.domain.Customer;
+import nl.stil4m.mollie.domain.Page;
+import nl.stil4m.mollie.domain.Payment;
+import nl.stil4m.mollie.domain.Subscription;
 import nl.stil4m.mollie.domain.customerpayments.FirstRecurringPayment;
 import nl.stil4m.mollie.domain.subpayments.ideal.CreateIdealPayment;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
-import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
-import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 public class CustomerSubscriptionsIntegrationTest {
 
     private CustomerPayments customerPayments;
     private CustomerSubscriptions customerSubscriptions;
+    private WebDriver driver;
+
+    @BeforeClass
+    public static void setupClass() {
+        //setup selenium
+        ChromeDriverManager.getInstance().setup();
+    }
 
     @Before
     public void before() throws InterruptedException, IOException {
@@ -47,8 +65,13 @@ public class CustomerSubscriptionsIntegrationTest {
         customerPayments = client.customerPayments(customer.getId());
         customerSubscriptions = client.customerSubscriptions(customer.getId());
 
-        //setup selenium
-        ChromeDriverManager.getInstance().setup();
+        //create new selenium driver
+        driver = new ChromeDriver();
+    }
+
+    @After
+    public void after() {
+        driver.quit();
     }
 
     @Test
@@ -69,10 +92,7 @@ public class CustomerSubscriptionsIntegrationTest {
         String paymentUrl = payment.getLinks().getPaymentUrl();
 
         //open paymentUrl and set it to paid
-
-        //setup selenium
-        WebDriver driver = new ChromeDriver();
-
+        //open payment link
         driver.get(paymentUrl);
         // Find ok button and click it
         driver.findElement(By.name("issuer")).click();
@@ -86,8 +106,6 @@ public class CustomerSubscriptionsIntegrationTest {
 
         //submit form
         driver.findElement(By.cssSelector("#footer > button")).click();
-
-        driver.quit();
 
         //check if payment is complete
         payment = customerPayments.get(payment.getId()).getData();//get new version of payment
@@ -128,7 +146,6 @@ public class CustomerSubscriptionsIntegrationTest {
         String paymentUrl = payment.getLinks().getPaymentUrl();
 
         //open paymentUrl and set it to paid
-
         //setup selenium
         WebDriver driver = new ChromeDriver();
 
@@ -145,8 +162,6 @@ public class CustomerSubscriptionsIntegrationTest {
 
         //submit form
         driver.findElement(By.cssSelector("#footer > button")).click();
-
-        driver.quit();
 
         //check if payment is complete
         payment = customerPayments.get(payment.getId()).getData();//get new version of payment
