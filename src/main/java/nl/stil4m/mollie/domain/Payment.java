@@ -182,4 +182,8 @@ public class Payment {
     public Optional<Boolean> geCanBeCancelled() {
         return canBeCancelled;
     }
+
+    public Date getFailedDatetime() {
+        return failedDatetime;
+    }
 }
