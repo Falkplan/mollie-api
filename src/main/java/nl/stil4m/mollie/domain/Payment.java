@@ -2,12 +2,11 @@ package nl.stil4m.mollie.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
-@JsonIgnoreProperties(value = { "issuer" })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Payment {
 
     private final String resource;
@@ -18,9 +17,10 @@ public class Payment {
     private final String recurringType;
     private final Date createdDatetime;
     private final String status;
-    private final String paidDatetime;
-    private final String cancelledDatetime;
-    private final String expiredDatetime;
+    private final Date paidDatetime;
+    private final Date cancelledDatetime;
+    private final Date expiredDatetime;
+    private final Date failedDatetime;
     private final Double amount;
     private final Double amountRefunded;
     private final Double amountRemaining;
@@ -36,29 +36,30 @@ public class Payment {
     private final Optional<Boolean> canBeCancelled;
 
     public Payment(@JsonProperty("resource") String resource,
-                   @JsonProperty("id") String id,
-                   @JsonProperty("profileId") String profileId,
-                   @JsonProperty("mode") String mode,
-                   @JsonProperty("customerId") String customerId,
-                   @JsonProperty("recurringType") String recurringType,
-                   @JsonProperty("createdDatetime") Date createdDatetime,
-                   @JsonProperty("status") String status,
-                   @JsonProperty("paidDatetime") String paidDatetime,
-                   @JsonProperty("cancelledDatetime") String cancelledDatetime,
-                   @JsonProperty("expiredDatetime") String expiredDatetime,
-                   @JsonProperty("amount") Double amount,
-                   @JsonProperty("amountRefunded") Double amountRefunded,
-                   @JsonProperty("amountRemaining") Double amountRemaining,
-                   @JsonProperty("description") String description,
-                   @JsonProperty("method") String method,
-                   @JsonProperty("details") Map<String, Object> details,
-                   @JsonProperty("links") Links links,
-                   @JsonProperty("metadata") Map<String, Object> metadata,
-                   @JsonProperty("locale") String locale,
-                   @JsonProperty("countryCode") String countryCode,
-                   @JsonProperty("expiryPeriod") String expiryPeriod,
-                   @JsonProperty("mandateId") Optional<String> mandateId,
-                   @JsonProperty("canBeCancelled") Optional<Boolean> canBeCancelled) {
+            @JsonProperty("id") String id,
+            @JsonProperty("profileId") String profileId,
+            @JsonProperty("mode") String mode,
+            @JsonProperty("customerId") String customerId,
+            @JsonProperty("recurringType") String recurringType,
+            @JsonProperty("createdDatetime") Date createdDatetime,
+            @JsonProperty("status") String status,
+            @JsonProperty("paidDatetime") Date paidDatetime,
+            @JsonProperty("cancelledDatetime") Date cancelledDatetime,
+            @JsonProperty("expiredDatetime") Date expiredDatetime,
+            @JsonProperty("amount") Double amount,
+            @JsonProperty("amountRefunded") Double amountRefunded,
+            @JsonProperty("amountRemaining") Double amountRemaining,
+            @JsonProperty("description") String description,
+            @JsonProperty("method") String method,
+            @JsonProperty("details") Map<String, Object> details,
+            @JsonProperty("links") Links links,
+            @JsonProperty("metadata") Map<String, Object> metadata,
+            @JsonProperty("locale") String locale,
+            @JsonProperty("countryCode") String countryCode,
+            @JsonProperty("expiryPeriod") String expiryPeriod,
+            @JsonProperty("mandateId") Optional<String> mandateId,
+            @JsonProperty("canBeCancelled") Optional<Boolean> canBeCancelled,
+            @JsonProperty("failedDatetime") Date failedDatetime) {
         this.resource = resource;
         this.id = id;
         this.profileId = profileId;
@@ -83,6 +84,7 @@ public class Payment {
         this.expiryPeriod = expiryPeriod;
         this.mandateId = mandateId;
         this.canBeCancelled = canBeCancelled;
+        this.failedDatetime = failedDatetime;
     }
 
     public String getResource() {
@@ -117,15 +119,15 @@ public class Payment {
         return status;
     }
 
-    public String getPaidDatetime() {
+    public Date getPaidDatetime() {
         return paidDatetime;
     }
 
-    public String getCancelledDatetime() {
+    public Date getCancelledDatetime() {
         return cancelledDatetime;
     }
 
-    public String getExpiredDatetime() {
+    public Date getExpiredDatetime() {
         return expiredDatetime;
     }
 

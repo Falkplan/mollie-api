@@ -1,7 +1,17 @@
 package nl.stil4m.mollie.concepts;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import nl.stil4m.mollie.Client;
 import nl.stil4m.mollie.ResponseOrError;
+import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
+import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
+import static nl.stil4m.mollie.TestUtil.assertWithin;
+import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
 import nl.stil4m.mollie.domain.CreatePayment;
 import nl.stil4m.mollie.domain.Issuer;
 import nl.stil4m.mollie.domain.Page;
@@ -9,27 +19,15 @@ import nl.stil4m.mollie.domain.Payment;
 import nl.stil4m.mollie.domain.subpayments.ideal.CreateIdealPayment;
 import nl.stil4m.mollie.domain.subpayments.ideal.IdealPaymentOptions;
 import org.apache.http.HttpStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Ignore;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
-import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
-import static nl.stil4m.mollie.TestUtil.assertWithin;
-import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class PaymentsIntegrationTest {
 
@@ -65,14 +63,40 @@ public class PaymentsIntegrationTest {
         ResponseOrError<Payment> paymentStatus = payments.get(id);
 
         assertThat(paymentStatus.getData().getStatus(), is("open"));
+        assertThat(paymentStatus.getData().getCreatedDatetime(), is(notNullValue()));
     }
 
     @Test
-    public void testGetPaymentWithRefunds() throws IOException, InterruptedException {
-        ResponseOrError<Payment> getResponse = payments.get("tr_3AdTKpQGii");
+    public void testGetPaymentWithExpiredStatus() throws IOException {
+        ResponseOrError<Payment> getResponse = payments.get("tr_GeKrSRrdbM");
+        Payment payment = getResponse.getData();
+        assertThat(payment.getStatus(), is("expired"));
+        assertThat(payment.getExpiredDatetime(), is(notNullValue()));
+    }
 
-        getResponse.get(payment -> assertThat(payment.getLinks().getRefunds().isPresent(), is(true)), errorData -> {
-        });
+    @Test
+    public void testGetPaymentWithPaidStatus() throws IOException {
+        ResponseOrError<Payment> getResponse = payments.get("tr_hN3edBfHGu");
+        Payment payment = getResponse.getData();
+        assertThat(payment.getStatus(), is("paid"));
+        assertThat(payment.getPaidDatetime(), is(notNullValue()));
+    }
+
+    @Test
+    public void testGetPaymentWithPaidCancelled() throws IOException {
+        ResponseOrError<Payment> getResponse = payments.get("tr_cE7D3BVWbp");
+        Payment payment = getResponse.getData();
+        assertThat(payment.getStatus(), is("cancelled"));
+        assertThat(payment.getCancelledDatetime(), is(notNullValue()));
+    }
+
+    @Test
+    public void testGetPaymentWithRefundedStatus() throws IOException, InterruptedException {
+        ResponseOrError<Payment> getResponse = payments.get("tr_R3EmcUauGb");
+        Payment payment = getResponse.getData();
+
+        assertThat(payment.getStatus(), is("refunded"));
+        assertThat(payment.getLinks().getRefunds().isPresent(), is(true));
 
     }
 
@@ -95,7 +119,6 @@ public class PaymentsIntegrationTest {
             assertThat(e.getMessage(), is("URL cannot contain null or blank elements"));
         }
     }
-
 
     @Test
     public void testCreatePayment() throws IOException {
@@ -139,14 +162,13 @@ public class PaymentsIntegrationTest {
         assertThat(createdPayment.getId(), is(notNullValue()));
         assertThat(createdPayment.getDetails(), is(nullValue()));
         assertThat(createdPayment.getLinks(), is(notNullValue()));
-        assertThat(createdPayment.getLinks().getPaymentUrl(),startsWith("https://www.mollie.com/paymentscreen/issuer/select/ideal/"));
+        assertThat(createdPayment.getLinks().getPaymentUrl(), startsWith("https://www.mollie.com/paymentscreen/issuer/select/ideal/"));
         assertThat(createdPayment.getLinks().getRedirectUrl(), is("http://example.com"));
         assertThat(createdPayment.getLinks().getWebhookUrl(), is("https://stil4m.github.io"));
         assertThat(createdPayment.getMode(), is("test"));
         assertThat(createdPayment.getStatus(), is("open"));
         assertThat(createdPayment.getMetadata(), is(meta));
     }
-
 
     @Test
     public void testCreateAndGetPayment() throws IOException {
@@ -179,8 +201,8 @@ public class PaymentsIntegrationTest {
         meta.put("foo", "bar");
 
         ResponseOrError<Payment> createResponse = payments.create(new CreatePayment(Optional.of("creditcard"), 2.00, "Some credit card description", "http://example.com", Optional.of("https://stil4m.github.io"), meta));
-        assertThat(createResponse,is(notNullValue()));
-        assertThat(createResponse.getSuccess(),is(true));
+        assertThat(createResponse, is(notNullValue()));
+        assertThat(createResponse.getSuccess(), is(true));
         ResponseOrError<Payment> paymentResponse = payments.get(createResponse.getData().getId());
         Payment payment = paymentResponse.getData();
 
@@ -263,9 +285,8 @@ public class PaymentsIntegrationTest {
 
         ResponseOrError<Payment> response = payments.delete(id);
 
-        assertThat(response.getSuccess(),is(true));
-        assertThat(response.getData(),is(notNullValue()));
-        assertThat(response.getData().getCancelledDatetime(),is(notNullValue()));
+        assertThat(response.getSuccess(), is(true));
+        assertThat(response.getData(), is(notNullValue()));
     }
 
     @Test
@@ -274,8 +295,8 @@ public class PaymentsIntegrationTest {
 
         ResponseOrError<Payment> response = payments.delete(id);
 
-        assertThat(response.getSuccess(),is(false));
-        assertThat(response.getStatus(),is(HttpStatus.SC_UNPROCESSABLE_ENTITY));
+        assertThat(response.getSuccess(), is(false));
+        assertThat(response.getStatus(), is(HttpStatus.SC_UNPROCESSABLE_ENTITY));
     }
 
     @Test
@@ -284,7 +305,7 @@ public class PaymentsIntegrationTest {
 
         ResponseOrError<Payment> response = payments.delete(id);
 
-        assertThat(response.getSuccess(),is(false));
-        assertThat(response.getStatus(),is(HttpStatus.SC_UNPROCESSABLE_ENTITY));
+        assertThat(response.getSuccess(), is(false));
+        assertThat(response.getStatus(), is(HttpStatus.SC_UNPROCESSABLE_ENTITY));
     }
 }

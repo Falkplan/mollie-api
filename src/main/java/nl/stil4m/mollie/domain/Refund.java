@@ -1,10 +1,11 @@
 package nl.stil4m.mollie.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Refund {
 
     private final String id;
@@ -21,11 +22,11 @@ public class Refund {
 
     @JsonCreator
     public Refund(@JsonProperty("id") String id,
-                  @JsonProperty("payment") Payment payment,
-                  @JsonProperty("amount") Double amount,
-                  @JsonProperty("status") String status,
-                  @JsonProperty("refundedDatetime") Date refundedDatetime,
-                  @JsonProperty("links") RefundLinks links) {
+            @JsonProperty("payment") Payment payment,
+            @JsonProperty("amount") Double amount,
+            @JsonProperty("status") String status,
+            @JsonProperty("refundedDatetime") Date refundedDatetime,
+            @JsonProperty("links") RefundLinks links) {
         this.id = id;
         this.payment = payment;
         this.amount = amount;
