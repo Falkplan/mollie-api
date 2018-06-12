@@ -1,11 +1,13 @@
 package nl.stil4m.mollie;
 
+import nl.stil4m.mollie.concepts.Chargebacks;
 import nl.stil4m.mollie.concepts.CustomerMandates;
 import nl.stil4m.mollie.concepts.CustomerPayments;
 import nl.stil4m.mollie.concepts.CustomerSubscriptions;
 import nl.stil4m.mollie.concepts.Customers;
 import nl.stil4m.mollie.concepts.Issuers;
 import nl.stil4m.mollie.concepts.Methods;
+import nl.stil4m.mollie.concepts.PaymentChargebacks;
 import nl.stil4m.mollie.concepts.PaymentRefunds;
 import nl.stil4m.mollie.concepts.Payments;
 import nl.stil4m.mollie.concepts.Refunds;
@@ -59,5 +61,13 @@ public class Client {
 
     public CustomerSubscriptions customerSubscriptions(String customerId) {
         return dynamicClient.customerSubscriptions(apiKey, customerId);
+    }
+
+    public PaymentChargebacks paymentChargebacks(String paymentId) {
+        return dynamicClient.paymentChargebacks(apiKey, paymentId);
+    }
+
+    public Chargebacks chargebacks() {
+        return dynamicClient.chargebacks(apiKey);
     }
 }

@@ -51,4 +51,12 @@ public class DynamicClient {
     public CustomerSubscriptions customerSubscriptions(String apiKey, String customerId) {
         return new CustomerSubscriptions(apiKey, endpoint, requestExecutor, customerId);
     }
+
+    public PaymentChargebacks paymentChargebacks(String apiKey, String paymentId) {
+        return new PaymentChargebacks(apiKey, endpoint, requestExecutor, paymentId);
+    }
+
+    public Chargebacks chargebacks(String apiKey) {
+        return new Chargebacks(apiKey, endpoint, requestExecutor);
+    }
 }
