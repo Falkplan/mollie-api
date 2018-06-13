@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 /**
  * @see https://www.mollie.com/en/docs/reference/subscriptions/create
- * @author stevensnoeijen
  */
 public class CreateSubscription {
 

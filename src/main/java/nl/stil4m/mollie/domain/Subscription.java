@@ -5,7 +5,6 @@ import java.util.Date;
 
 /**
  * @see https://www.mollie.com/en/docs/reference/subscriptions/get
- * @author stevensnoeijen
  */
 public class Subscription {
 
@@ -73,7 +72,8 @@ public class Subscription {
     private String description;
 
     /**
-     * The payment method used for this subscription, either forced on creation by specifying the method parameter, or null if any of the customer's valid mandates may be used.
+     * The payment method used for this subscription, either forced on creation by specifying the method parameter, or null if any of the customer's
+     * valid mandates may be used.
      * <br/>
      * Possible values: creditcard, directdebit, null
      */
@@ -85,8 +85,7 @@ public class Subscription {
     private Date cancelledDatetime;
 
     /**
-     * An object with URLs important to the payment process.
-     * Only webhookUrl can be set.
+     * An object with URLs important to the payment process. Only webhookUrl can be set.
      */
     private Links links;
 

@@ -5,10 +5,6 @@ import nl.stil4m.mollie.RequestExecutor;
 import nl.stil4m.mollie.domain.Chargeback;
 import nl.stil4m.mollie.domain.Page;
 
-/**
- *
- * @author stevensnoeijen
- */
 public class Chargebacks extends AbstractConcept<Chargeback> implements ListAll<Chargeback> {
 
     private static final TypeReference<Page<Chargeback>> PAGE_TYPE = new TypeReference<Page<Chargeback>>() {
