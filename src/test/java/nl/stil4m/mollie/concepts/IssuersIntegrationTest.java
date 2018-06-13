@@ -1,24 +1,26 @@
 package nl.stil4m.mollie.concepts;
 
+import nl.stil4m.mollie.ResponseOrError;
+import nl.stil4m.mollie.domain.Issuer;
+import nl.stil4m.mollie.domain.Page;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import nl.stil4m.mollie.ResponseOrError;
+
 import static nl.stil4m.mollie.TestUtil.TEST_ISSUER;
 import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
 import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
 import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
-import nl.stil4m.mollie.domain.Issuer;
-import nl.stil4m.mollie.domain.Page;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 public class IssuersIntegrationTest {
 

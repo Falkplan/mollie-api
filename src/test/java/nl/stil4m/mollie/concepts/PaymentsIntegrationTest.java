@@ -1,17 +1,7 @@
 package nl.stil4m.mollie.concepts;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import nl.stil4m.mollie.Client;
 import nl.stil4m.mollie.ResponseOrError;
-import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
-import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
-import static nl.stil4m.mollie.TestUtil.assertWithin;
-import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
 import nl.stil4m.mollie.domain.CreatePayment;
 import nl.stil4m.mollie.domain.Issuer;
 import nl.stil4m.mollie.domain.Page;
@@ -19,15 +9,27 @@ import nl.stil4m.mollie.domain.Payment;
 import nl.stil4m.mollie.domain.subpayments.ideal.CreateIdealPayment;
 import nl.stil4m.mollie.domain.subpayments.ideal.IdealPaymentOptions;
 import org.apache.http.HttpStatus;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
+import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
+import static nl.stil4m.mollie.TestUtil.assertWithin;
+import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 public class PaymentsIntegrationTest {
 

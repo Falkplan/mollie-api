@@ -1,21 +1,23 @@
 package nl.stil4m.mollie.concepts;
 
+import nl.stil4m.mollie.Client;
+import nl.stil4m.mollie.ResponseOrError;
+import nl.stil4m.mollie.domain.Page;
+import nl.stil4m.mollie.domain.Refund;
+import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
-import nl.stil4m.mollie.Client;
-import nl.stil4m.mollie.ResponseOrError;
+
 import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
 import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
 import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
-import nl.stil4m.mollie.domain.Page;
-import nl.stil4m.mollie.domain.Refund;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import org.junit.Before;
-import org.junit.Test;
 
 public class RefundsIntegrationTest {
 

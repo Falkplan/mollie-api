@@ -1,19 +1,8 @@
 package nl.stil4m.mollie.concepts;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import nl.stil4m.mollie.Client;
 import nl.stil4m.mollie.ResponseOrError;
-import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
-import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
-import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
 import nl.stil4m.mollie.domain.CreateCustomer;
 import nl.stil4m.mollie.domain.CreatePayment;
 import nl.stil4m.mollie.domain.CreateSubscription;
@@ -23,19 +12,32 @@ import nl.stil4m.mollie.domain.Payment;
 import nl.stil4m.mollie.domain.Subscription;
 import nl.stil4m.mollie.domain.customerpayments.FirstRecurringPayment;
 import nl.stil4m.mollie.domain.subpayments.ideal.CreateIdealPayment;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import static nl.stil4m.mollie.TestUtil.TEST_TIMEOUT;
+import static nl.stil4m.mollie.TestUtil.VALID_API_KEY;
+import static nl.stil4m.mollie.TestUtil.strictClientWithApiKey;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public class CustomerSubscriptionsIntegrationTest {
 
