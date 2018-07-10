@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 
-@JsonInclude(value = JsonInclude.Include.NON_DEFAULT, content = JsonInclude.Include.NON_EMPTY)
+@JsonInclude(content = JsonInclude.Include.NON_EMPTY)
 public class UpdateCustomer {
 
 
