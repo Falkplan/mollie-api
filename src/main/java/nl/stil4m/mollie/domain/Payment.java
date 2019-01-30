@@ -2,7 +2,6 @@ package nl.stil4m.mollie.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +34,7 @@ public class Payment {
     private final String expiryPeriod;
     private final Optional<String> mandateId;
     private final Optional<Boolean> canBeCancelled;
+    private final String subscriptionId;
 
     public Payment(@JsonProperty("resource") String resource,
             @JsonProperty("id") String id,
@@ -60,7 +60,8 @@ public class Payment {
             @JsonProperty("expiryPeriod") String expiryPeriod,
             @JsonProperty("mandateId") Optional<String> mandateId,
             @JsonProperty("canBeCancelled") Optional<Boolean> canBeCancelled,
-            @JsonProperty("failedDatetime") Date failedDatetime) {
+            @JsonProperty("failedDatetime") Date failedDatetime,
+            @JsonProperty("subscriptionId") String subscriptionId) {
         this.resource = resource;
         this.id = id;
         this.profileId = profileId;
@@ -86,6 +87,7 @@ public class Payment {
         this.mandateId = mandateId;
         this.canBeCancelled = canBeCancelled;
         this.failedDatetime = failedDatetime;
+        this.subscriptionId = subscriptionId;
     }
 
     public String getResource() {
@@ -186,5 +188,9 @@ public class Payment {
 
     public Date getFailedDatetime() {
         return failedDatetime;
+    }
+
+    public String getSubscriptionId() {
+        return subscriptionId;
     }
 }
